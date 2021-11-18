@@ -72,5 +72,41 @@ class CardListViewController: UITableViewController {
         guard let detailViewController = storyboard.instantiateViewController(withIdentifier: "CardDetailViewController") as? CardDetailViewController else {return}
         detailViewController.promotionDetail = creditCardList[indexPath.row].promotionDetail
         self.showDetailViewController(detailViewController, sender: nil)
+        
+        //Option1
+        let cardID = creditCardList[indexPath.row].id
+//        ref.child("Item\(cardID)/isSelected").setValue(true)
+        //cardID의 경로에 isSelected에 true값을 넣겠다
+        //true 대신 nil 넣으면 해당 경로의 값은 삭제됨 Firebase는 삭제를 더 명시적으로 removeValue를 사용함
+        
+        
+        //Option2 현재 키 값이 분명하지 않을떄 객체가 가지고 있는 고유한 값을 검색함으로써 객체의 경로를 알 수 있다.
+//        ref.queryOrdered(byChild: "id").queryEqual(toValue: cardID).observe(.value) { [weak self] snapshot in
+//            guard let self = self, //순환참조 방지
+//                  let value = snapshot.value as? [String: [String: Any]],
+//                  let key = value.keys.first else { return }
+//
+//            self.ref.child("\(key)isSelected").setValue(true)
+//        }
+    }
+    
+    //삭제
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            //Option1 - 경로를 알 때
+            let cardID = creditCardList[indexPath.row].id
+            ref.child("Item\(cardID)").removeValue()
+            
+            //Option2 - 경로를 모를 때
+//            ref.queryOrdered(byChild: "id").queryEqual(toValue: cardID).observe(.value) {[weak self] snapshot in
+//                guard let self = self,
+//                      let value = snapshot.value as? [String: [String: Any]], //어레이 값으로 전달되기 때문에 first
+//                      let key = value.keys.first else { return }
+//                self.ref.child(key).removeValue()
+//            }
+        }
     }
 }
