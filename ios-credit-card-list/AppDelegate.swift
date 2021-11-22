@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         db.collection("creditCardList").getDocuments{ snapshot, _ in
         //값이 있는지 없는지 확인해야 함
             guard snapshot?.isEmpty == true else { return }
-            //db가 비어있을 때 
+            //db가 비어있을 때
             let batch = db.batch()
 
             let card0Ref = db.collection("creditCardList").document("card0")
